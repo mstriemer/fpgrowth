@@ -13,24 +13,7 @@
 using namespace std;
 
 Database* read_database(char *filename);
-void bubble_sort(hElement *items[], int itemCount)
-{
-	bool sorted = false;
-	while (!sorted)
-	{
-		sorted = true;
-		for (int i = 1; i < itemCount; i++)
-		{
-			if (items[i]->sup > items[i-1]->sup)
-			{
-				hElement* t = items[i];
-				items[i] = items[i-1];
-				items[i-1] = t;
-				sorted = false;
-			}
-		}
-	}
-}
+void bubble_sort(hElement *items[], int itemCount);
 
 int main(int argc, char *argv[])
 {
@@ -89,7 +72,7 @@ int main(int argc, char *argv[])
 	printf("\nFP-Tree\n");
 	fpTree->print();
 	
-	return 0;
+	exit(0);
 }
 
 Database* read_database(char *filename)
@@ -119,4 +102,23 @@ Database* read_database(char *filename)
 	}
 	
 	return db;
+}
+
+void bubble_sort(hElement *items[], int itemCount)
+{
+	bool sorted = false;
+	while (!sorted)
+	{
+		sorted = true;
+		for (int i = 1; i < itemCount; i++)
+		{
+			if (items[i]->sup > items[i-1]->sup)
+			{
+				hElement* t = items[i];
+				items[i] = items[i-1];
+				items[i-1] = t;
+				sorted = false;
+			}
+		}
+	}
 }
