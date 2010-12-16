@@ -4,16 +4,7 @@
 #include <stdlib.h>
 #include <vector>
 
-//#include "tree.hh"
-//#include "tree_util.hh"
-
-//#include <omp.h>
-//#include <mpi.h>
-
 #define LINE_BUF_SIZE 512
-// #define MINSUP 2
-// #define DOMAIN 1000
-// #define FILENAME "PreciseDB.txt"
 
 using namespace std;
 
@@ -56,13 +47,6 @@ class TreeElement
 	}
 };
 
-int compare(const void *a, const void *b)
-{ 
-    hElement *ia = (hElement *)a;
-    hElement *ib = (hElement *)b;
-    return (int)(ib->sup - ia->sup);
-}
-
 int main(int argc, char *argv[] )
 {
 	if (argc != 4)
@@ -75,15 +59,15 @@ int main(int argc, char *argv[] )
 	int minsup = atoi(argv[2]);
 	int domain = atoi(argv[3]);
 	
+	// Initialize the header table
 	hElement header[domain];
 	for (int i = 0; i < domain; i++)
 	{
 		header[i].sup = 0;
 		header[i].itemID = i + 1;
 	}
-	int headerCount = 0;
 	
-	//scan DB once, find frequent 1-itemset
+	// Scan the DB finding frequent 1-itemsets
 	FILE *db = fopen(filename,"r");
 	char line[LINE_BUF_SIZE];
 	int  tid;
@@ -92,34 +76,27 @@ int main(int argc, char *argv[] )
 	char *item;
 	
 	fgets(line, LINE_BUF_SIZE, db);
-	// printf("Database transactions: %s",line);
 	
 	while(fgets(line, LINE_BUF_SIZE, db))
 	{
-		//split up the line by tab
+		// Split up the line on tabs
 		tid       = atoi(strtok (line,"\t"));
 		itemCount = atoi(strtok (NULL,"\t"));
 		itemstr     = strtok (NULL,"\t");
 		
-		// printf("TID: %d,Item Count: %d,Items: %s",tid,itemCount,items);
-		
 		item = strtok (itemstr," ");
 		
-		//parse the items
+		// Parse the items
 		while(item != NULL)
 		{
-			// hElement *hEl = &header[atoi(item) - 1];
 			header[atoi(item) - 1].sup++;
 			item = strtok (NULL," ");
 		}
 	}
 	
+	// Scan the DB again constructing the FP-Tree
 	rewind(db);
-	
-	//scan DB again, construct FP-Tree
-	
-	//time to make a tree!
-	TreeElement *head, *curr;		//head is the root of the node, curr is the node we are checking ???
+	TreeElement *head, *curr;
 	head = new TreeElement;
 	head->item.sup = -1;
 	head->item.itemID = -1;
@@ -128,13 +105,11 @@ int main(int argc, char *argv[] )
 	
 	while(fgets(line, LINE_BUF_SIZE, db))
 	{
-		//split up the line by tab
+		// Split up the line on tabs
 		tid       = atoi(strtok (line,"\t"));
 		itemCount = atoi(strtok (NULL,"\t"));
 		itemstr   = strtok (NULL,"\t");
 		hElement* items[itemCount];
-		
-		//printf("TID: %d,Item Count: %d,Items: %s",tid,itemCount,items);
 		
 		curr = head;
 		
@@ -186,12 +161,8 @@ int main(int argc, char *argv[] )
 		}
 	}
 	
-	//printout the tree
+	// Print out the tree
 	head->print(0);
-	// for(int i = 0; i < head->children.size(); i++)
-	// {
-		//printf("> %d:%d \n", head->children[i]->item.itemID,head->children[i]->item.sup);
-	// }
 	
 	exit(0);
 }
