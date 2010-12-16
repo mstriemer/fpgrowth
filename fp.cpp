@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <vector>
 
+#include "Database.h"
+
 #define LINE_BUF_SIZE 512
 
 using namespace std;
@@ -74,8 +76,8 @@ int main(int argc, char *argv[] )
 	int  itemCount;
 	char *itemstr;  
 	char *item;
-	
-	fgets(line, LINE_BUF_SIZE, db);
+	int xns = atoi(fgets(line, LINE_BUF_SIZE, db));
+	Database *tdb = new Database(xns);
 	
 	while(fgets(line, LINE_BUF_SIZE, db))
 	{
