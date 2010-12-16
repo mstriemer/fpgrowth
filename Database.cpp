@@ -15,10 +15,17 @@ Database::~Database()
 
 Transaction* Database::addRow(int count, int items[])
 {
-	transactions[size] = new Transaction(size, count, items);
+	addRow(size, count, items);
+}
+
+Transaction* Database::addRow(int id, int count, int items[])
+{
+	transactions[size] = new Transaction(id, count, items);
 	size++;
 	return transactions[size-1];
 }
+
+
 
 Transaction* Database::getRow(int index)
 {

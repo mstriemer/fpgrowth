@@ -10,6 +10,7 @@ public:
 	Database(int xns);
 	~Database();
 	Transaction* addRow(int count, int items[]);
+	Transaction* addRow(int id, int count, int items[]);
 	Transaction* getRow(int index);
 	void print();
 };
