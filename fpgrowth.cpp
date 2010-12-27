@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 	}
 	
 	// Construct the FP-Tree
-	TreeElement *fpTree = new TreeElement(-1, -1);
+	TreeElement *fpTree = new TreeElement(-1, -1, NULL);
 	TreeElement *curr = fpTree;
 	
 	for (int i = 0; i < db->size; i++)
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 		for (int j = 0; j < row->count && items[j]->sup >= minsup; j++)
 		{
 			// Add the child and set it to curr
-			curr = curr->addChild(items[j]->itemID);
+			curr = curr->addChild(items[j]);
 		}
 	}
 	

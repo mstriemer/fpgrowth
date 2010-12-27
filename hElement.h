@@ -1,7 +1,9 @@
 #ifndef _hElement
 #define _hElement
-typedef struct {
+class hElement {
+public:
 	int itemID;
 	int sup;
-} hElement;
+	hElement *sibling;
+};
 #endif

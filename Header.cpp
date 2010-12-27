@@ -11,6 +11,7 @@ Header::Header(int d)
 	{
 		items[i].itemID = i + 1;
 		items[i].sup = 0;
+		items[i].sibling = NULL;
 	}
 }
 

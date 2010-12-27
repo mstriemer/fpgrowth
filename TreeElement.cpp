@@ -2,15 +2,16 @@
 
 #include "TreeElement.h"
 
-TreeElement::TreeElement(int itemID, int sup)
+TreeElement::TreeElement(int itemID, int sup, hElement *sibling)
 {
 	item.itemID = itemID;
 	item.sup = sup;
+	item.sibling = sibling;
 }
 
-TreeElement* TreeElement::addChild(int itemID)
+TreeElement* TreeElement::addChild(hElement *headerNode)
 {
-	TreeElement* child = find(itemID);
+	TreeElement* child = find(headerNode->itemID);
 	
 	if (child)
 	{
@@ -18,7 +19,7 @@ TreeElement* TreeElement::addChild(int itemID)
 	}
 	else
 	{
-		child = new TreeElement(itemID, 1);
+		child = new TreeElement(headerNode->itemID, 1, headerNode->sibling);
 		children.push_back(child);
 	}
 	
