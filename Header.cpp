@@ -40,6 +40,6 @@ void Header::print()
 	for (int i = 0; i < domain; i++)
 	{
 		if (items[i].sup > 0)
-			printf("%d: %d\n", items[i].itemID, items[i].sup);
+			items[i].print();
 	}
 }

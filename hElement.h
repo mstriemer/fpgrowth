@@ -5,5 +5,7 @@ public:
 	int itemID;
 	int sup;
 	hElement *sibling;
+	
+	void print();
 };
 #endif

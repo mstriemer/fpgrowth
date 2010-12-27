@@ -20,6 +20,7 @@ TreeElement* TreeElement::addChild(hElement *headerNode)
 	else
 	{
 		child = new TreeElement(headerNode->itemID, 1, headerNode->sibling);
+		headerNode->sibling = &child->item;
 		children.push_back(child);
 	}
 	
