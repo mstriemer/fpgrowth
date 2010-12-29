@@ -7,12 +7,13 @@
 #include "Header.h"
 #include "TreeElement.h"
 #include "hElement.h"
+#include "ItemSet.h"
 
 #define LINE_BUF_SIZE 512
 
 Database* read_database(char *filename);
 void bubble_sort(hElement **items, int itemCount);
-void findFrequentItemsets(TreeElement*, int);
+//void findFrequentItemsets(TreeElement*, int);
 
 int main(int argc, char *argv[])
 {
@@ -71,6 +72,7 @@ int main(int argc, char *argv[])
 	printf("\n");
 	
 	// Find frequent n-itemsets
+	/*
 	for (int i = 0; i < 5; i++)
 	{
 		if (sItems[i]->sup >= minsup)
@@ -78,13 +80,83 @@ int main(int argc, char *argv[])
 			findFrequentItemsets(sItems[i]->link, minsup);
 		}
 	}
+	*/
+	
 	
 	printf("Database\n");
-	db->print();
+	//db->print();
 	printf("\nHeader\n");
-	header->print();
+	//header->print();
 	printf("\nFP-Tree\n");
 	fpTree->print();
+	
+	std::vector<ItemSet*> frequentItemSets;
+	int itemsetCount;
+	hElement *headerEntry;
+	TreeElement *nextSibling;
+	ItemSet *itemset;
+	ItemSet *prevSet;
+	
+	printf("\nFrequent Itemsets\n");
+	bool alreadyCounted;
+	
+	for(int i = 0; i < header->domain; i++)
+	{
+		headerEntry = header->items[i];
+		
+		//if header says the item is frequent
+		if(header->items[i]->sup >= minsup)
+		{
+			curr = headerEntry->link;
+			nextSibling = curr->sibling;
+			
+			//we can add the one itemset right now
+			itemset = new ItemSet::ItemSet(curr->itemID);
+			frequentItemSets.push_back(itemset);
+			
+			itemset->printSet();
+			
+			while(NULL != curr)
+			{
+				alreadyCounted = false;
+				if(itemsetCount == 0)
+					itemset = new ItemSet::ItemSet(curr->itemID);
+				else
+					itemset = new ItemSet::ItemSet(curr->itemID, frequentItemSets.back());
+				
+				//check to see if we added it already to the frequent itemsets
+				for(int j = 0; j < frequentItemSets.size(); j ++)
+				{
+					if(frequentItemSets[j]->compare(itemset))
+					{
+						alreadyCounted = true;
+						break;
+					}
+				}
+				
+				if(!alreadyCounted)
+				{
+					frequentItemSets.push_back(itemset);
+					itemsetCount++;
+					prevSet = itemset;
+				
+					itemset->printSet();
+				}
+				
+				curr = curr->getParent();
+				
+				if(curr->itemID == -1)
+				{
+					itemsetCount = 0;//not the total count
+					curr = nextSibling;
+					if(nextSibling != NULL)
+						nextSibling = nextSibling->sibling;
+				}
+			}
+		}
+	}
+	
+	
 	
 	// Free up memory
 	
@@ -92,6 +164,7 @@ int main(int argc, char *argv[])
 	exit(0);
 }
 
+/*
 void findFrequentItemsets(TreeElement *el, int minsup)
 {
 	if (el->getSupport() >= minsup)
@@ -102,6 +175,7 @@ void findFrequentItemsets(TreeElement *el, int minsup)
 	if (el->sibling)
 		findFrequentItemsets(el->getSibling(), minsup);
 }
+*/
 
 Database* read_database(char *filename)
 {

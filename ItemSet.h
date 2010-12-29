@@ -7,6 +7,8 @@ public:
 	int size;
 	
 	ItemSet(int);
-	ItemSet(int, ItemSet);
+	ItemSet(int, ItemSet*);
+	void printSet();
+	bool compare(ItemSet*);
 };
 #endif

@@ -1,4 +1,5 @@
 #include "ItemSet.h"
+#include "stdio.h"
 
 ItemSet::ItemSet(int item)
 {
@@ -9,21 +10,36 @@ ItemSet::ItemSet(int item)
 
 ItemSet::ItemSet(int item, ItemSet *set)
 {
-	bool itemIn = false;
-	int j = 0;
+	int i;
 	size = set->size + 1;
 	items = new int[size];
-	for (int i = 0; i < size)
+	
+	for (i = 0; i < size-1; i++)
 	{
-		if (!itemIn && item < set[j])
-		{
-			items[i] = item;
-			itemIn = true;
-		}
-		else
-		{
-			items[i] = set->items[j];
-			j++;
-		}
+		items[i] = set->items[i];
 	}
+	
+	items[i] = item;
+}
+
+void ItemSet::printSet()
+{
+	for(int i = 0; i < size; i++)
+	{
+		printf("%i ",items[i]);
+	}
+	printf("\n");
+}
+
+bool ItemSet::compare(ItemSet* set)
+{
+	if(size != set->size)
+		return false;
+	for (int i = 0; i < size; i++)
+	{
+		if(items[i] != set->items[i])
+			return false;
+	}
+	
+	return true;
 }
