@@ -10,10 +10,9 @@
 
 #define LINE_BUF_SIZE 512
 
-using namespace std;
-
 Database* read_database(char *filename);
-void bubble_sort(hElement *items[], int itemCount);
+void bubble_sort(hElement **items, int itemCount);
+void findFrequentItemsets(TreeElement*, int);
 
 int main(int argc, char *argv[])
 {
@@ -39,7 +38,7 @@ int main(int argc, char *argv[])
 	}
 	
 	// Construct the FP-Tree
-	TreeElement *fpTree = new TreeElement(-1, -1, NULL);
+	TreeElement *fpTree = new TreeElement(-1, -1, NULL, NULL);
 	TreeElement *curr = fpTree;
 	
 	for (int i = 0; i < db->size; i++)
@@ -65,6 +64,21 @@ int main(int argc, char *argv[])
 		}
 	}
 	
+	// Sort the header table
+	hElement *sItems[] = {header->getItem(4), header->getItem(1), header->getItem(5), header->getItem(3), header->getItem(2)};
+	for (int i = 0; i < 5; i++)
+		printf("[%d: %d] ", sItems[i]->itemID, sItems[i]->sup);
+	printf("\n");
+	
+	// Find frequent n-itemsets
+	for (int i = 0; i < 5; i++)
+	{
+		if (sItems[i]->sup >= minsup)
+		{
+			findFrequentItemsets(sItems[i]->link, minsup);
+		}
+	}
+	
 	printf("Database\n");
 	db->print();
 	printf("\nHeader\n");
@@ -72,7 +86,21 @@ int main(int argc, char *argv[])
 	printf("\nFP-Tree\n");
 	fpTree->print();
 	
+	// Free up memory
+	
+	
 	exit(0);
+}
+
+void findFrequentItemsets(TreeElement *el, int minsup)
+{
+	if (el->getSupport() >= minsup)
+		printf("%d meets minsup\n", el->getItemID());
+	// Check the sibling and the parent
+	if (el->parent->itemID != -1)
+		findFrequentItemsets(el->getParent(), minsup);
+	if (el->sibling)
+		findFrequentItemsets(el->getSibling(), minsup);
 }
 
 Database* read_database(char *filename)
@@ -104,7 +132,8 @@ Database* read_database(char *filename)
 	return db;
 }
 
-void bubble_sort(hElement *items[], int itemCount)
+// Lawl, m i 4 real?
+void bubble_sort(hElement **items, int itemCount)
 {
 	bool sorted = false;
 	while (!sorted)

@@ -1,12 +1,14 @@
 #include <stdio.h>
 
 #include "TreeElement.h"
+#include "hElement.h"
 
-TreeElement::TreeElement(int itemID, int sup, hElement *sibling)
+TreeElement::TreeElement(int _itemID, int _sup, TreeElement *_sibling, TreeElement *_parent)
 {
-	item.itemID = itemID;
-	item.sup = sup;
-	item.sibling = sibling;
+	itemID = _itemID;
+	sup = _sup;
+	sibling = _sibling;
+	parent = _parent;
 }
 
 TreeElement* TreeElement::addChild(hElement *headerNode)
@@ -19,19 +21,37 @@ TreeElement* TreeElement::addChild(hElement *headerNode)
 	}
 	else
 	{
-		child = new TreeElement(headerNode->itemID, 1, headerNode->sibling);
-		headerNode->sibling = &child->item;
+		child = new TreeElement(headerNode->itemID, 1, headerNode->link, this);
+		headerNode->link = child;
 		children.push_back(child);
 	}
 	
 	return child;
 }
 
+int TreeElement::getSupport()
+{
+	return sup;
+}
+
+int TreeElement::getTotalSupport()
+{
+	if (sibling)
+		return sup + sibling->getTotalSupport();
+	else
+		return sup;
+}
+
+int TreeElement::getItemID()
+{
+	return itemID;
+}
+
 TreeElement* TreeElement::find(int itemID)
 {
 	for (int i = 0; i < children.size(); i++)
 	{
-		if (children[i]->item.itemID == itemID)
+		if (children[i]->itemID == itemID)
 		{
 			return children[i];
 		}
@@ -41,17 +61,28 @@ TreeElement* TreeElement::find(int itemID)
 
 void TreeElement::found()
 {
-	item.sup++;
+	sup++;
+}
+
+
+TreeElement* TreeElement::getSibling()
+{
+	return sibling;
+}
+
+TreeElement* TreeElement::getParent()
+{
+	return parent;
 }
 
 void TreeElement::print(int nParents)
 {
-	if (item.itemID != 0)
+	if (itemID != 0)
 	{
 		for (int i = 0; i < nParents; i++)
-			printf("\t");
+			printf("        ");
 			
-		printf("%d:%d\n", item.itemID, item.sup);
+		printf("%d:%d\n", itemID, sup);
 	}
 	
 	for (int i = 0; i < children.size(); i++)

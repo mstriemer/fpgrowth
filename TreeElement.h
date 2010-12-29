@@ -1,17 +1,29 @@
+#ifndef _TreeElement
+#define _TreeElement
+
 #include <vector>
 
-#include "hElement.h"
+class hElement;
 
 class TreeElement
 {
 public:
-	hElement item;
+	int sup;
+	int itemID;
+	TreeElement *sibling;
+	TreeElement *parent;
 	std::vector<TreeElement*> children;
 	
-	TreeElement(int itemID, int sup, hElement *headerNode);
+	TreeElement(int _itemID, int _sup, TreeElement *_sibling, TreeElement *_parent);
 	TreeElement* find(int itemID);
 	void print(int nParents);
 	void print();
 	void found();
+	TreeElement* getSibling();
+	TreeElement* getParent();
+	int getSupport();
+	int getTotalSupport();
+	int getItemID();
 	TreeElement* addChild(hElement *headerNode);
 };
+#endif
