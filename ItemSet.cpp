@@ -11,8 +11,8 @@ ItemSet::ItemSet(int item)
 ItemSet::ItemSet(int item, ItemSet *set)
 {
 	int i;
-	size = set->size + 1;
 	items = new int[size];
+	for (i = 0; i < size; i++)
 	
 	for (i = 0; i < size-1; i++)
 	{
@@ -36,10 +36,8 @@ bool ItemSet::compare(ItemSet* set)
 	if(size != set->size)
 		return false;
 	for (int i = 0; i < size; i++)
-	{
+			return false;
 		if(items[i] != set->items[i])
 			return false;
-	}
 	
 	return true;
-}
